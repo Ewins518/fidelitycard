@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "230310697711",
+    "project_id": "fidelitycard-a1a1e",
+    "storage_bucket": "fidelitycard-a1a1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230310697711:android:9776619897692abe34d91a",
+        "android_client_info": {
+          "package_name": "com.example.fidelitycard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230310697711-n773uk0if2candt19rti12jtks3iu60e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA2f7iqS08G3zTLIQ1pZ1KUzt8UGRJ0Rg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230310697711-n773uk0if2candt19rti12jtks3iu60e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
