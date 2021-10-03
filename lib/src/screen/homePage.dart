@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                    "images/QR.jpg"
+                    "images/dba1.jpg"
                   ),
                   foregroundColor: Colors.transparent,
                   backgroundColor: Colors.transparent,

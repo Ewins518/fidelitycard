@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fidelitycard/src/controller/reductionController.dart';
@@ -129,12 +130,14 @@ class _ScanQRState extends State<ScanQR>{
 
                                          } else {
                                       print('Document does not exist on the database');
+
                                     }
                                   });
 
                                       print('Document data: $data1');
                                     } else {
-                                      print('Document does not exist on the database');
+                                     dialog();
+
                                     }
                                   });
                           });
@@ -147,4 +150,24 @@ class _ScanQRState extends State<ScanQR>{
       ),
     );
   }
+
+
+
+Future<Null> dialog() async {
+  return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: true,
+        title: 'Error',
+        desc:
+            'Code QR invalide',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
+}
+
+
+
 }

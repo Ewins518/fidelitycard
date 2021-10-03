@@ -169,7 +169,7 @@ void initState(){
                                   .catchError((error) => print("Failed to update user: $error"));
                    
                             });
-                         dialog();
+                        settingModalBottomSheet(context);
                          
                         }
                         }
@@ -197,6 +197,7 @@ void initState(){
        
       )
     );
+    
   }
 
 
@@ -236,6 +237,79 @@ void initState(){
     );
   }
 
+
+void settingModalBottomSheet(context){
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc){
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
+            ),
+            child: new Wrap(
+              children: <Widget>[
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center
+                  ,children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(radius: 25,backgroundImage: AssetImage("images/dba2.jpg"),),
+                  ),
+                ],),
+            Container(
+              alignment: Alignment.center,
+              child: Text("$nom $prenom", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ),),
+            ),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text("Total à payer après reduction"),
+                ),
+                SizedBox(height: 5,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    
+                    SizedBox(width: 10,),
+                    Text("$totalAPayer XOF", style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold ),),
+                    SizedBox(width: 10,),
+
+                  ],
+                ),
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pop(bc);
+                      Navigator.pop(context);
+
+                  setState(() {
+                      totalAPayer = 0;               
+                   });
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: HexColor("60282e"),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text("OK", style: TextStyle(fontSize: 22, color: Colors.white),),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+    );
+  }
 
 
 Future<Null> dialog() async {
