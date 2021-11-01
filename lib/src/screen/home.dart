@@ -59,7 +59,7 @@ void initState(){
                             TextSpan(text: "\nTotal Balance\n", style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 18)),
                             TextSpan(text: "\XOF ", style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 30)),
                             TextSpan(text: "$balance \n", style: TextStyle(color: Colors.white, fontSize: 36)),
-                            TextSpan(text: " \nYour cards", style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 18)),
+                            TextSpan(text: " \nYour card", style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 18)),
                           ]
                         )),
                       ),
@@ -70,25 +70,25 @@ void initState(){
                   SizedBox(height: 5,),
                   Container(
                     height: 200,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
+                    
+                      child: 
                         CreditCard(color: colors, number: number, image: image, valid: "Expire $validationDate",),
-//                        CreditCard(color: "000068", number: 1298, image: "visa.png", valid: "VALID 07/24",),
-                      ],
-                    ),
+                      
                   ),
                   SizedBox(height: 5,),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "TOTAL ACHETER",
-                          style: TextStyle(color: Colors.black, fontSize: 18)),
-                      ),
-                    ],
-                  ),
+                  
+                   
+                        Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "TOTAL ACHETER",
+                              
+                              style: TextStyle(color: Colors.black, fontSize: 22),
+                              
+                              ),
+                          
+                        ),
+                   
 
                   Container(
                     height: 90,
@@ -104,42 +104,6 @@ void initState(){
             )
                   ),
 
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "TOTAL A PAYER",
-                            style: TextStyle(color: Colors.black, fontSize: 18)),
-                         )
-                          
-                    ],
-                  ),
-                  
-                   Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: HexColor("000068"),
-                          borderRadius: BorderRadius.circular(15)
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text("$totalAPayer XOF", style: TextStyle(fontSize: 22, color: Colors.white),),
-                        ),
-                      ),
-                    ),
-                     SizedBox(height: 10,),
-          //        Container(
-          //          height: 70,
-          //        child: Align(
-          //          alignment: Alignment.center,
-          //          child: Text(
-          //            "45000 XOF",
-          //            style: TextStyle(color: Colors.black, fontSize: 28)),
-          //        )
-          //  ),
-          
                  Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -159,7 +123,7 @@ void initState(){
                            setState(() {
                                  totalAcheter = double.parse(mycontroller.text);  
                                  totalAPayer = balance >= totalAcheter*0.1 ? totalAcheter - totalAcheter*0.1 : totalAcheter;
-                                 balance = balance - totalAcheter*0.1 ;
+                                 balance = balance >= totalAcheter*0.1 ? balance - totalAcheter*0.1 : balance;
 
                                  FirebaseFirestore.instance
                                   .collection('cards')
@@ -241,11 +205,13 @@ void initState(){
 void settingModalBottomSheet(context){
     showModalBottomSheet(
         context: context,
+        isDismissible: false,
         builder: (BuildContext bc){
           return Container(
+            height: 400,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))
+              borderRadius: BorderRadius.only(topRight: Radius.circular(60), topLeft: Radius.circular(60))
             ),
             child: new Wrap(
               children: <Widget>[
@@ -258,26 +224,28 @@ void settingModalBottomSheet(context){
                     child: CircleAvatar(radius: 25,backgroundImage: AssetImage("images/dba2.jpg"),),
                   ),
                 ],),
+                SizedBox(height: 10,),
             Container(
               alignment: Alignment.center,
               child: Text("$nom $prenom", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ),),
             ),
+            SizedBox(height: 25,),
                 Container(
                   alignment: Alignment.center,
                   child: Text("Total à payer après reduction"),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(height: 40,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     
-                    SizedBox(width: 10,),
+                   // SizedBox(width: 20,),
                     Text("$totalAPayer XOF", style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold ),),
-                    SizedBox(width: 10,),
+                  //  SizedBox(width: 10,),
 
                   ],
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 80,),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: InkWell(

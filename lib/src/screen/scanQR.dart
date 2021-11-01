@@ -1,10 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fidelitycard/src/controller/reductionController.dart';
 import 'package:fidelitycard/src/models/hex_color.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
 
@@ -37,34 +36,34 @@ class _ScanQRState extends State<ScanQR>{
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      "Raw Data: ${(qrData)}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 20
-                      ),
-                    ),
-                    ),
-              
-                IconButton(
-                  icon: Icon(Icons.launch_outlined),
-                  onPressed: hasdata ? ()async {
-                    if( await canLaunch(qrData) ){
-                      await launch(qrData);
-                    } else {
-                      throw "Could not Launch";
-                    }
-                  } 
-                  : null
-                  
-                  )
-            ],
-            ),
-            SizedBox(height: 15,),
+            //  Row(
+            //    mainAxisAlignment: MainAxisAlignment.center,
+            //    children: [
+            //      Flexible(
+            //        child: Text(
+            //          "Raw Data: ${(qrData)}",
+            //          textAlign: TextAlign.center,
+            //          style: TextStyle(
+            //            fontSize: 20
+            //          ),
+            //        ),
+            //        ),
+            //  
+            //    IconButton(
+            //      icon: Icon(Icons.launch_outlined),
+            //      onPressed: hasdata ? ()async {
+            //        if( await canLaunch(qrData) ){
+            //          await launch(qrData);
+            //        } else {
+            //          throw "Could not Launch";
+            //        }
+            //      } 
+            //      : null
+            //      
+            //      )
+            //],
+            //),
+            //SizedBox(height: 15,),
             Container(
                       width: ((MediaQuery.of(context).size.width) / 2) - 45,
                       height: 35,
@@ -83,7 +82,7 @@ class _ScanQRState extends State<ScanQR>{
                           style: TextStyle(fontSize: 17 )
                         ),
                         onPressed: ()async {
-                          var option = ScanOptions(autoEnableFlash: true);
+                          var option = ScanOptions(autoEnableFlash: false);
                           data = await BarcodeScanner.scan(
                             options: option
                           );
@@ -110,9 +109,9 @@ class _ScanQRState extends State<ScanQR>{
                                               var date = DateTime.now();
 
                                               var newFormat = DateFormat("yyyy-MM-dd");
-                                              validationDate = newFormat.format(data1["validationDate"]);
+                                              validationDate = newFormat.format(data1["validationDate"].toDate());
 
-                                              if(date.isAfter(data1["validationDate"]))
+                                              if(date.isAfter(data1["validationDate"].toDate()))
                                                 validate = false;
 
                                              setState(() {
@@ -153,7 +152,7 @@ class _ScanQRState extends State<ScanQR>{
 
 
 
-Future<Null> dialog() async {
+ dialog() async {
   return AwesomeDialog(
         context: context,
         dialogType: DialogType.ERROR,

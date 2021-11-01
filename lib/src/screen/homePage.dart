@@ -1,7 +1,12 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:fidelitycard/src/models/hex_color.dart';
+import 'package:fidelitycard/src/screen/generatedQR.dart';
 import 'package:flutter/material.dart';
-
-import 'generatedQR.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fidelitycard/src/controller/reductionController.dart';
+import 'package:intl/intl.dart';
+import 'home.dart';
 import 'scanQR.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -14,7 +19,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar:  AppBar(
-        title: Text("QR Scan/ Generate"),
+        title: Text("DBA Card"),
+        centerTitle: true,
         backgroundColor:  HexColor("60282e"),
       ),
       body: Container(
@@ -59,12 +65,82 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Scan QR",
                           style: TextStyle(fontSize: 15 )
                         ),
-                        onPressed: () {
-                          Navigator.push(context, 
-                          MaterialPageRoute(
-                            builder: (context) => ScanQR())
-                          );
-                        },
+                        onPressed: () async {
+                         
+                           var option = ScanOptions(autoEnableFlash: false);
+                          data = await BarcodeScanner.scan(
+                            options: option
+                          );  
+                                
+                          setState(() {
+                            qrData = data.rawContent.toString();
+                            hasdata = true;
+                            
+                            if(qrData.isNotEmpty)
+                            try{
+                            FirebaseFirestore.instance
+                                  .collection('cards')
+                                  .doc(qrData)
+                                  .get()
+                                  .then((DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists) {
+                                      Map <String, dynamic> data1 = documentSnapshot.data();
+
+                                      FirebaseFirestore.instance
+                                          .collection('utilisateurs')
+                                          .doc(data1['user'])
+                                          .get()
+                                          .then((DocumentSnapshot documentSnapshot1) {
+
+                                          if (documentSnapshot.exists) {
+                                              Map <String, dynamic> data2 = documentSnapshot1.data();
+                                              var date = DateTime.now();
+
+                                              var newFormat = DateFormat("yyyy-MM-dd");
+                                              validationDate = newFormat.format(data1["validationDate"].toDate());
+
+                                              if(date.isAfter(data1["validationDate"].toDate())){
+                                                 validate = false;
+                                                 dialog("Carte expiré");
+                                               //  Navigator.pop(context);
+                                              }
+                                                
+
+                                             setState(() {
+                                               balance = data1["montant"] ;
+                                               typeCard = data1["cardType"];  
+                                               nom = data2["nom"];
+                                               prenom = data2["prenom"];                     
+                                             });
+
+                                               Navigator.push(context, 
+                                                 MaterialPageRoute(
+                                                   builder: (context) => Home())
+                                              );
+
+
+                                         } else {
+                                      print('Document does not exist on the database');
+
+                                    }
+                                  });
+
+                                      print('Document data: $data1');
+                                    } else {
+                                    print('Document does not exist on the database one');
+
+                                     dialog('Code QR invalide');
+
+                                    }
+                                  });
+                            }
+                            catch(e) {
+                               dialog('Code QR invalide');
+
+                            }    
+                          });
+                          
+                         }
                       ),
                     )
                     ),
@@ -88,11 +164,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: TextStyle(fontSize: 15 )
                         ),
                         onPressed: () {
-                          Navigator.push(context, 
+                            Navigator.push(context, 
                           MaterialPageRoute(
-                            builder: (context) => QRGenerator())
-                          );
-                        },
+                            builder: (context) => QRGenerator()));
+                        }
                       ),
                     )
                   ],
@@ -104,5 +179,22 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
+
+ dialog(String msg) async {
+  return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: true,
+        title: 'Error',
+        desc: msg,
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
+}
+
 
 }

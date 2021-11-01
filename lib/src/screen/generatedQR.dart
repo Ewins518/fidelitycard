@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fidelitycard/src/models/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,8 +33,9 @@ void dispose() {
 FirebaseFirestore data_instance = FirebaseFirestore.instance;
  List categories = ["CC", "ICC", "VICC"];
 String valueChoose;
-double montant;
-
+double montant = 50000;
+int _currentStep = 0;
+StepperType stepperType = StepperType.vertical;
 
   @override 
   Widget build (BuildContext context) {
@@ -41,76 +43,139 @@ double montant;
       appBar: AppBar(
         title: Text("QR Scanner"),
         backgroundColor:  HexColor("60282e"),
+        centerTitle: true,
 
       ),
       body: Container(
         child: Form(
           key: _globalKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              buildTextField(Icons.person,true, firstNameController),
-              buildTextField(Icons.person,true, lastNameController),
-
-               Container(
-            padding: EdgeInsets.only(left: 16, right: 16),
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(35.0)),
-            child: DropdownButton(
-                hint: Text(
-                  'Selectionnez le type de carte',
-                  style: TextStyle(fontSize: 14, color: Palette.textColor1),
-                ),
-                dropdownColor: Colors.white,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 30,
-                isExpanded: true,
-                underline: SizedBox(),
-                style: TextStyle(fontSize: 14, color: Palette.textColor1),
-                value: valueChoose,
-                onChanged: (newValue) {
-                  setState(() {
-                    valueChoose = newValue;
-
-                    if(newValue == "CC")
-                      montant = 50000;
-                    else if(newValue == "ICC")
-                      montant = 75000;
-                    else if(newValue == "VICC")
-                      montant = 100000;
-                  });
-                },
-                items: categories.map((valueItem) {
-                  return DropdownMenuItem(
-                      value: valueItem,
-                      child: Text(
-                        valueItem,
-                        style:
-                            TextStyle(fontSize: 14, color: Palette.textColor1),
-                      ));
-                }).toList()),
-          ),
-              Container(
-                        width: ((MediaQuery.of(context).size.width) / 2) - 45,
-                        height: 35,
-                        child: OutlineButton(
-                          focusColor: Colors.red,
-                          highlightColor: Colors.blue,
-                          hoverColor: Colors.lightBlue[100],
-                          splashColor: Colors.blue,
-                          borderSide: BorderSide(
-                            width: 3,
-                            color: Colors.blue
-                          ),
-                          shape: StadiumBorder(),
-                          child: Text(
-                            "Generate QR",
-                            style: TextStyle(fontSize: 15 )
-                          ),
-                          onPressed: navigate,
+           // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+           children: [
+              Expanded(
+                child: Stepper(
+                  type: stepperType,
+                  physics: ScrollPhysics(),
+                  currentStep: _currentStep,
+                   controlsBuilder: (BuildContext context,
+                      {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                    return Row(
+                      children: <Widget>[
+                         TextButton(
+                          onPressed: onStepCancel,
+                          child: const Text('Annuler' , style: TextStyle(fontSize: 18, color:Colors.red)),
                         ),
-                      )
+                        TextButton(
+                          onPressed: onStepContinue,
+                          child: _currentStep < 2 ? const Text('Suivant', style: TextStyle(fontSize: 18, color:Colors.green)) : const Text('Terminer', style: TextStyle(fontSize: 19, color:Colors.green)),
+                        ),
+                       
+                      ],
+                    );
+                  },
+                  onStepTapped: (step) => tapped(step),
+                  onStepContinue:  continued,
+                  onStepCancel: cancel,
+                  steps: <Step>[
+                     Step(
+                      title: new Text('Nom'),
+                      content: Column(
+                        children: <Widget>[
+              buildTextField(Icons.person,true, firstNameController, "Nom"),
+                        ]
+                     ),
+                     isActive: _currentStep >= 0,
+                      state: _currentStep >= 0 ?
+                      StepState.complete : StepState.disabled,
+                  ),
+                   Step(
+                      title: new Text('Prénom'),
+                      content: Column(
+                        children: <Widget>[
+              buildTextField(Icons.person,true, lastNameController,"Prénom"),
+                        ]
+                     ),
+                     isActive: _currentStep >= 0,
+                      state: _currentStep >= 1 ?
+                      StepState.complete : StepState.disabled,
+                  ),
+                   Step(
+                      title: new Text('Type de carte'),
+                      content: Column(
+                        children: <Widget>[
+                            Container(
+                            padding: EdgeInsets.only(left: 16, right: 16),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey, width: 1),
+                                borderRadius: BorderRadius.circular(35.0)),
+                            child: DropdownButton(
+                                hint: Text(
+                                  'Selectionnez le type de carte',
+                                  style: TextStyle(fontSize: 14, color:Colors.black),
+                                ),
+                                dropdownColor: Colors.white,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconSize: 30,
+                                isExpanded: true,
+                                underline: SizedBox(),
+                                style: TextStyle(fontSize: 14, color: Colors.black),
+                                value: valueChoose,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    valueChoose = newValue;
+                
+                                    if(newValue == "CC")
+                                      montant = 50000;
+                                    else if(newValue == "ICC")
+                                      montant = 75000;
+                                    else if(newValue == "VICC")
+                                      montant = 100000;
+                                  });
+                                },
+                                items: categories.map((valueItem) {
+                                  return DropdownMenuItem(
+                                      value: valueItem,
+                                      child: Text(
+                                        valueItem,
+                                        style:
+                                            TextStyle(fontSize: 14, color: Colors.black),
+                                      ));
+                                }).toList()),
+                          ),
+                        ]
+                     ),
+                     isActive: _currentStep >= 0,
+                      state: _currentStep >= 2 ?
+                      StepState.complete : StepState.disabled,
+                  )
+                ]
+               )
+               ),
+               
+      //        Container(
+      //                  width: ((MediaQuery.of(context).size.width) / 2) - 45,
+      //                  height: 35,
+      //                  child: OutlineButton(
+      //                    focusColor: Colors.red,
+      //                    highlightColor: Colors.blue,
+      //                    hoverColor: Colors.lightBlue[100],
+      //                    splashColor: Colors.blue,
+      //                    borderSide: BorderSide(
+      //                      width: 3,
+      //                      color: Colors.blue
+      //                    ),
+      //                    shape: StadiumBorder(),
+      //                    child: Text(
+      //                      "Generate QR",
+      //                      style: TextStyle(fontSize: 15 )
+      //                    ),
+      //                    onPressed: (){
+      //                       if(_globalKey.currentState.validate()){
+      //                        navigate();
+      //                       }
+      //                      },
+      //                  ),
+      //                )
             ],
           ),
         ),
@@ -148,9 +213,10 @@ Map<String, dynamic> data1 = {
    .then((value1){ 
      print("card created");
 
-       Navigator.push(context, 
+       Navigator.pushAndRemoveUntil(context, 
             MaterialPageRoute(
-              builder: (context) => GeneratedQR(value1.id))
+              builder: (context) => GeneratedQR(value1.id)),
+              (route) => false
             );
 
      })
@@ -162,19 +228,19 @@ Map<String, dynamic> data1 = {
 
     }
 
-     Widget buildTextField( IconData icon, bool enabled, TextEditingController controller) {
+     Widget buildTextField( IconData icon, bool enabled, TextEditingController controller, String hintext) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextFormField(
         obscureText: false,
         controller: controller,
         style: TextStyle(color: Colors.black),
-       keyboardType: TextInputType.number,
+       keyboardType: TextInputType.text,
        enabled: enabled,
        validator: (value){
         
            if(value.isEmpty)
-              return "Entrer le montant ";       
+              return "Ce champ peut pas être vide";       
          
          return null;
          
@@ -190,12 +256,57 @@ Map<String, dynamic> data1 = {
             borderRadius: BorderRadius.all(Radius.circular(15.0)),
           ),
           contentPadding: EdgeInsets.all(10),
-          hintText: "Montant",
+          hintText: hintext,
           hintStyle: TextStyle(fontSize: 14, color: Palette.textColor1),
          
         ),
       ),
     );
+
+    
+  }
+switchStepsType() {
+    setState(() => stepperType == StepperType.vertical
+        ? stepperType = StepperType.horizontal
+        : stepperType = StepperType.vertical);
   }
 
+  tapped(int step){
+    setState(() => _currentStep = step);
   }
+
+  continued(){
+    if(_currentStep < 2) 
+        setState(() => _currentStep += 1); 
+    else{
+
+         if(_globalKey.currentState.validate())
+          navigate();
+          else
+           dialog();
+         
+    }
+  }
+  cancel(){
+    _currentStep > 0 ?
+        setState(() => _currentStep -= 1) : null;
+  }
+
+
+ dialog() async {
+  return AwesomeDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        animType: AnimType.RIGHSLIDE,
+        headerAnimationLoop: true,
+        title: 'Error',
+        desc:
+            'Remplissez tout les champs dmandé',
+        btnOkOnPress: () {},
+        btnOkIcon: Icons.cancel,
+        btnOkColor: Colors.red)
+      ..show();
+}
+  }
+
+  
