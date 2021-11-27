@@ -122,15 +122,15 @@ void initState(){
                           if(_globalKey.currentState.validate()){
                            setState(() {
                                  totalAcheter = double.parse(mycontroller.text);  
-                                 totalAPayer = balance >= totalAcheter*0.1 ? totalAcheter - totalAcheter*0.1 : totalAcheter;
-                                 balance = balance >= totalAcheter*0.1 ? balance - totalAcheter*0.1 : balance;
+                                 totalAPayer = balance >= totalAcheter*reduction ? totalAcheter - totalAcheter*reduction : totalAcheter;
+                                 balance = balance >= totalAcheter*reduction ? balance - totalAcheter*reduction : balance;
 
                                  FirebaseFirestore.instance
                                   .collection('cards')
                                   .doc(qrData)
                                   .update({"montant": balance})
                                   .then((value) => print("Card Updated"))
-                                  .catchError((error) => print("Failed to update user: $error"));
+                                  .catchError((error) => print("Failed to update cards: $error"));
                    
                             });
                         settingModalBottomSheet(context);

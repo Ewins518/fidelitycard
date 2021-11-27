@@ -39,6 +39,7 @@ dependencies:
   awesome_dialog: ^2.1.1
   path_provider: ^2.0.6
   share_plus: ^3.0.4
+  gallery_saver: ^2.3.2
 
 dev_dependencies:
   flutter_test:

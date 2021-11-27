@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share_plus/share_plus.dart';
 
 class GeneratedQR extends StatefulWidget {
   final myQR;
@@ -21,6 +20,7 @@ class GeneratedQR extends StatefulWidget {
 
 class _GeneratedQRState extends State<GeneratedQR> {
    GlobalKey globalKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +46,7 @@ class _GeneratedQRState extends State<GeneratedQR> {
         ),
           actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.share),
+            icon: Icon(Icons.download),
             onPressed: _captureAndSharePng,
           )
         ],
@@ -77,8 +77,9 @@ class _GeneratedQRState extends State<GeneratedQR> {
       await file.writeAsBytes(pngBytes);
 
       //await Share.file(widget.myQR, '$_dataString.png', pngBytes, 'image/png');
-      final channel = const MethodChannel('channel:me.alfian.share/share');
-      channel.invokeMethod('shareFile', 'image.png');
+      //final channel = const MethodChannel('channel:me.alfian.share/share');
+      //channel.invokeMethod('shareFile', 'image.png');
+      
 
     } catch(e) {
       print(e.toString());

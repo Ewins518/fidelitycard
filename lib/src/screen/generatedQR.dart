@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:fidelitycard/src/controller/reductionController.dart';
 import 'package:fidelitycard/src/models/hex_color.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -204,6 +205,7 @@ Map<String, dynamic> data = {
 Map<String, dynamic> data1 = {
         "cardType" : valueChoose,
         "montant" : montant,
+        "validation": validate,
         "validationDate": validationDate,
         "user" : userUid
 };
