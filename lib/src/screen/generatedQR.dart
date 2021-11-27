@@ -1,3 +1,4 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fidelitycard/src/controller/reductionController.dart';
 import 'package:fidelitycard/src/models/hex_color.dart';
@@ -153,30 +154,6 @@ StepperType stepperType = StepperType.vertical;
                )
                ),
                
-      //        Container(
-      //                  width: ((MediaQuery.of(context).size.width) / 2) - 45,
-      //                  height: 35,
-      //                  child: OutlineButton(
-      //                    focusColor: Colors.red,
-      //                    highlightColor: Colors.blue,
-      //                    hoverColor: Colors.lightBlue[100],
-      //                    splashColor: Colors.blue,
-      //                    borderSide: BorderSide(
-      //                      width: 3,
-      //                      color: Colors.blue
-      //                    ),
-      //                    shape: StadiumBorder(),
-      //                    child: Text(
-      //                      "Generate QR",
-      //                      style: TextStyle(fontSize: 15 )
-      //                    ),
-      //                    onPressed: (){
-      //                       if(_globalKey.currentState.validate()){
-      //                        navigate();
-      //                       }
-      //                      },
-      //                  ),
-      //                )
             ],
           ),
         ),
@@ -186,6 +163,13 @@ StepperType stepperType = StepperType.vertical;
 
 void navigate() {
 
+ArsProgressDialog progressDialog = ArsProgressDialog(
+                	context,
+                	blur: 2,
+                	backgroundColor: Color(0x33000000),
+                	animationDuration: Duration(milliseconds: 500));
+                  
+ progressDialog.show();
 String userUid;
 var addDt = DateTime.now();
       // Add a new document with a generated id.
@@ -214,7 +198,7 @@ Map<String, dynamic> data1 = {
   cards.add(data1)
    .then((value1){ 
      print("card created");
-
+   progressDialog.dismiss();
        Navigator.pushAndRemoveUntil(context, 
             MaterialPageRoute(
               builder: (context) => GeneratedQR(value1.id)),

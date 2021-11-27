@@ -4,6 +4,8 @@ double reduction = 0.1;
 
 double totalAcheter = 0;
 
+double finalReduction;
+
 String typeCard;
 
 String qrUrl;

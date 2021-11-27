@@ -1,3 +1,4 @@
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,6 +61,14 @@ class _ScanQRState extends State<ScanQR>{
                             options: option
                           );
                           setState(() {
+                            ArsProgressDialog progressDialog = ArsProgressDialog(
+                            	context,
+                            	blur: 2,
+                            	backgroundColor: Color(0x33000000),
+                            	animationDuration: Duration(milliseconds: 500));
+                              
+                              progressDialog.show();
+
                             qrData = data.rawContent.toString();
                             hasdata = true;
                             
@@ -93,7 +102,8 @@ class _ScanQRState extends State<ScanQR>{
                                                nom = data2["nom"];
                                                prenom = data2["prenom"];                     
                                              });
-
+                                                 progressDialog.dismiss();
+                                                 
                                                Navigator.push(context, 
                                                  MaterialPageRoute(
                                                    builder: (context) => Home())
@@ -122,8 +132,6 @@ class _ScanQRState extends State<ScanQR>{
       ),
     );
   }
-
-
 
  dialog() async {
   return AwesomeDialog(

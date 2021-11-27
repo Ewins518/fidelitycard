@@ -11,7 +11,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  
+  FirebaseFirestore data_instance = FirebaseFirestore.instance;
+
   @override
 void dispose(){
   totalAPayer = 0;
@@ -124,6 +125,7 @@ void initState(){
                                  totalAcheter = double.parse(mycontroller.text);  
                                  totalAPayer = balance >= totalAcheter*reduction ? totalAcheter - totalAcheter*reduction : totalAcheter;
                                  balance = balance >= totalAcheter*reduction ? balance - totalAcheter*reduction : balance;
+                                finalReduction = totalAcheter - totalAPayer;
 
                                  FirebaseFirestore.instance
                                   .collection('cards')
@@ -133,6 +135,7 @@ void initState(){
                                   .catchError((error) => print("Failed to update cards: $error"));
                    
                             });
+                            navigate();
                         settingModalBottomSheet(context);
                          
                         }
@@ -279,6 +282,30 @@ void settingModalBottomSheet(context){
     );
   }
 
+void navigate() {
+
+
+var addDt = DateTime.now();
+      // Add a new document with a generated id.
+
+Map<String, dynamic> data1 = {
+        "montant" : finalReduction,
+        "date": addDt,
+        "card_id" : qrData,
+};
+
+  CollectionReference cards = data_instance.collection("transactions");
+  cards.add(data1)
+   .then((value1){ 
+     print("transaction created");
+
+     })
+    .catchError((error) => print("Failed to add transaction: $error"));
+
+      print("transaction Added");
+      
+
+    }
 
 Future<Null> dialog() async {
   return showDialog(
