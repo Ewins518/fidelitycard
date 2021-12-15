@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   radius: 150,
                 ),
                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                    Hero(
                     tag: "Scan QR",
@@ -145,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )
                     ),
-                    SizedBox(width: 25,),
+                   // SizedBox(width: 25,),
 
                   //  Container(
                   //    width: ((MediaQuery.of(context).size.width) / 2) - 45,
